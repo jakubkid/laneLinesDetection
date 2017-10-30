@@ -1,0 +1,60 @@
+# TODO: Build your pipeline that will draw lane lines on the test_images
+# then save them to the test_images_output directory.
+debug = False
+imgList = os.listdir("test_images/")
+for imgName in imgList:
+    image = mpimg.imread('test_images/' + imgName)
+    gray = grayscale(image)
+    print('Image ', imgName, 'with dimensions:', gray.shape)
+    if debug:
+        plt.figure()
+        plt.title('Grayscale Original')
+        plt.imshow(gray, cmap='gray')
+
+    krnelSize = 7 # gaussian bluring kernel size larger filters more
+    grayGaus = gaussian_blur(gray, krnelSize)
+    if debug:
+        plt.figure()
+        plt.title('After Gausian blur kernel ' + str(krnelSize))
+        plt.imshow(grayGaus, cmap='gray')
+
+    lowThreshold = 40  # Low treshold defines gradiend value above which pixel is marked as edge if connected to strong pixel
+    highThreshold = 90 # High treshold defines gradiend value above which pixel is always marked as edge
+    cannyTrans = canny(grayGaus, lowThreshold, highThreshold)
+    if debug:
+        plt.figure()
+        plt.title('Canny transform lowThr ' + str(lowThreshold) + ' highThr '  + str(highThreshold))
+        plt.imshow(cannyTrans, cmap='gray')
+
+    imshape = cannyTrans.shape
+    vertices = np.array([[(50,imshape[0]),(420, 330), (imshape[1]-420, 330), (imshape[1]-50,imshape[0])]], dtype=np.int32) # define region of intrest
+    cannyRegion = region_of_interest(cannyTrans, vertices)
+    if debug:
+        plt.figure()
+        plt.title('Canny region \n' + str(vertices))
+        plt.imshow(cannyRegion, cmap='gray')
+
+    rho = 2          # distance resolution in pixels of the Hough grid
+    theta = np.pi/180# angular resolution in radians of the Hough grid
+    threshold = 20   # minimum number of votes (intersections in Hough grid cell)
+    minLineLen = 40  # minimum number of pixels making up a line
+    maxLineGap = 20  # maximum gap in pixels between connectable line segments
+    houghLines = hough_lines(cannyRegion, rho, theta, threshold, minLineLen, maxLineGap)
+    houghLinesImg = np.zeros((cannyRegion.shape[0], cannyRegion.shape[1], 3), dtype=np.uint8)
+    #houghLinesImg = np.zeros_like(cannyRegion)
+    draw_lines(houghLinesImg, houghLines)
+    if debug:
+        plt.figure()
+        plt.title('Hough lines rho ' + str(rho) + ' theta ' + str(theta*180/np.pi) + '\N{DEGREE SIGN} \n threshold ' + str(threshold) + ' minLineLen ' + str(minLineLen) + ' maxLineGap ' + str(maxLineGap))
+        plt.imshow(houghLinesImg)
+        plt.figure()
+        plt.title('Hough lines combined ')
+        plt.imshow(weighted_img(image, houghLinesImg))
+
+    markedImage = aprox_lines(image, houghLines, vertices[0,1][1], vertices[0,0][1])
+
+    plt.figure()
+    plt.title('Marked lines combined ')
+    plt.imshow(markedImage)
+
+    cv2.imwrite('test_images_output/' + imgName, cv2.cvtColor(markedImage, cv2.COLOR_RGB2BGR))
