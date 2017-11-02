@@ -14,7 +14,14 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [baseImage]: ./test_images/solidWhiteCurve.jpg "Base Image"
-[houghImage]: ./test_images_output/houghLinessolidWhiteCurve.jpg "After Hough Transfor"
+[binImage]: ./test_images_output/binsolidWhiteCurve.jpg "Binary image"
+[binGaussImage]: ./test_images_output/binGaussolidWhiteCurve.jpg "Filtered binary image"
+[cannyImage]: ./test_images_output/CannysolidWhiteCurve.jpg "Canny esges image"
+[cannyRegionImage]: ./test_images_output/cannyRegionsolidWhiteCurve.jpg "Canny esges region image"
+[houghImage]: ./test_images_output/houghLinessolidWhiteCurve.jpg "After Hough Transform"
+[finalImage]: ./test_images_output/solidWhiteCurve.jpg "Final Image"
+
+
 
 ---
 
@@ -30,7 +37,29 @@ If you'd like to include images to show how the pipeline works, here is how to i
 
 ![alt text][baseImage]
 
+First all grey colors are converted to black color, grey is defined as a color for which all three components are lower than the threshold.
+
+![alt text][binImage]
+
+Next binary image is filtered
+
+![alt text][binGaussImage]
+
+On filtered image canny edge detection is applied
+
+![alt text][cannyImage]
+
+After edges are detected only region infront of the car is selected
+
+![alt text][cannyRegionImage]
+
+On this edges hough transform is applied to detect lines
+
 ![alt text][houghImage]
+
+This lines are filteded based on expected angle (+-10) finally left and right line is fitted to this lines
+
+![alt text][finalImage]
 
 
 ### 2. Identify potential shortcomings with your current pipeline
