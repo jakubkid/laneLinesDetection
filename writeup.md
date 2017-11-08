@@ -72,4 +72,4 @@ A possible improvement would be to define one region for left line and one regio
 
 Another potential improvement would be more sophisticated colour information processing.
 
-Finally, for video processing information about line position from previous frames could be used to filter the output.
+For video processing information about line position from previous frames could be used to filter the output.
