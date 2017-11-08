@@ -22,12 +22,12 @@
 ### 1. Image Processing Pipeline
 
 My pipeline consists of 6 steps:
-..* Conversion to binary black and white image;
-..* Filtering the noise by applying Gaussian blur;
-..* Edges extraction using Canny transform;
-..* Region selection;
-..* Edges to line conversion using Hugh transform;
-..* Distinction of left and right line; 
+* Conversion to binary black and white image;
+* Filtering the noise by applying Gaussian blur;
+* Edges extraction using Canny transform;
+* Region selection;
+* Edges to line conversion using Hugh transform;
+* Distinction of left and right line; 
 
 Those above steps are repeated until the two lines are found by decreasing the threshold value by 5 with each iteration.
 
